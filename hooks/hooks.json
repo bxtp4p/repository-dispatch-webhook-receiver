@@ -1,0 +1,47 @@
+[
+   {
+     "id": "repository-dispatch",
+     "execute-command": "/var/scripts/repository_dispatch.sh",
+     "command-working-directory": "/var/scripts",
+     "pass-arguments-to-command":
+     [
+       {
+         "source": "entire-payload",
+         "name": "action"
+       },
+       {
+         "source": "entire-headers"
+       }
+     ],
+     "trigger-rule":
+     {
+       "and":
+       [
+         {
+           "match":
+           {
+             "type": "payload-hmac-sha1",
+             "secret": "{{ getenv "WEBHOOK_SECRET" | js }}",
+             "parameter":
+             {
+               "source": "header",
+               "name": "X-Hub-Signature"
+             }
+           }
+         },
+         {
+           "match":
+           {
+             "type": "value",
+             "value": "repository",
+             "parameter":
+             {
+               "source": "header",
+               "name": "X-GitHub-Event"
+             }
+           }
+         }
+       ]
+     }
+   }
+ ]
