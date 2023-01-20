@@ -5,15 +5,15 @@ Example webhook that can receive `repository` events and relay the headers and p
 This uses [docker-webhook](https://github.com/almir/docker-webhook). 
 
 
-## Build the image
+## Build the Image
 
 ```
 docker image build --rm -t repository-dispatch-webhook . 
 ```
 
-## Running
+## Run the Receiver
 
-Clone and navigate to this repo directory. Set the following environment variables:
+Set the following environment variables:
 
 ```
 export WEBHOOK_SECRET=[[mysecret]]
@@ -36,3 +36,15 @@ docker run -d -p 9000:9000 \
    --name=webhook \
    repository-dispatch-webhook -verbose -hooks=/etc/webhook/hooks.json -hotreload -template
 ```
+
+If you're running this locally, you can expose this publicly via [ngrok](https://ngrok.com/) or [localtunnel](https://theboroer.github.io/localtunnel-www/).
+
+## Receiver Environment Variables
+| Environment Variable | Description |
+| -------------------- | ----------- |
+| WEBHOOK_SECRET | The secret the receiver should use to evaluate the request. Needs to be the same as what is configured in your GitHub webhook settings. |
+| GH_TOKEN | [GitHub Personal Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) used to make the call to the GitHub REST API [repository `/dispatches` endpoint](https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#create-a-repository-dispatch-event). |
+| OWNER | The owner of the repo to send the event to |
+| REPO | The repo to send the event to |
+| EVENT_TYPE | The [event type](https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#create-a-repository-dispatch-event) the Actions workflow is expecting |
+
