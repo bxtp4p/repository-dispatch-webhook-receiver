@@ -11,6 +11,10 @@
        },
        {
          "source": "entire-headers"
+       },
+       {
+         "source": "header",
+         "name": "X-GitHub-Delivery"
        }
      ],
      "trigger-rule":
